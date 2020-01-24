@@ -2,7 +2,7 @@
   <div class="columns is-multiline is-1">
     <div class="column is-variable is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" v-for="item in news" :key="item.id">
           <article class="tile is-child box">
-            <figure class="image is-4by3">
+            <figure class="image is-4by3" v-if="item.imgURL">
               <img :src="item.imgURL" @error="imgUrlAlt" ref="img" :alt="item.title">
             </figure>
             <h2 class="title has-text-left">

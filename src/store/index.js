@@ -1,20 +1,34 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as Axios from 'axios';
+import {countries} from './common/countries';
+import {categories} from './common/categories';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     news: [],
-    country: [],
-    category: [],
+    selectsData: {
+      countries,
+      categories
+    },
+    baseURL: 'https://newsapi.org/v2/top-headlines',
+    country: 'us',
+    category: 'general',
+    apiKey: 'f7906f3b40f64b829a5fb30922fc2aad',
     loading: false,
     error: null
   },
   mutations: {
     setLoadedNews(state, payload) {
       state.news = payload
+    },
+    setCategory(state, payload) {
+      state.category = payload
+    },
+    setCountry(state, payload) {
+      state.country = payload
     },
     setLoading (state, payload) {
       state.loading = payload
@@ -27,9 +41,17 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadNews ({ commit}) {
+    loadNews ({ state, commit }) {
       commit('setLoading', true)
-      Axios.get('https://newsapi.org/v2/top-headlines?country=us&apiKey=f7906f3b40f64b829a5fb30922fc2aad')
+      Axios({
+        method: 'get',
+        baseURL: state.baseURL,
+        params: {
+          country: state.country,
+          category: state.category,
+          apiKey: state.apiKey
+        },
+      })
       .then((response) => {
         const news = []
         const obj = response.data.articles
@@ -53,11 +75,31 @@ export default new Vuex.Store({
           commit('setLoading', false)
         }
       )
+    },
+    setNewCountry({ commit }, payload){
+      const newCountry = payload
+      commit('setCountry', newCountry)
+    },
+    setNewCategory({ commit }, payload){
+      const newCategory = payload
+      commit('setCategory', newCategory)
     }
   },
   getters: {
     loadedNews(state) {
       return state.news
+    },
+    getCountries(state) {
+      return state.selectsData.countries
+    },
+    getCategories(state) {
+      return state.selectsData.categories
+    },
+    curentCountry(state) {
+      return state.country
+    },
+    curentCategory(state) {
+      return state.category
     },
     loading (state) {
       return state.loading
