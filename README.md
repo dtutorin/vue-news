@@ -3,7 +3,7 @@
 The News App powered by News API.
 Vue + Vuex + Buefy + Axios
 
-
+The App has features for filter news by countries and categories.
 
 ## Project setup
 ```
